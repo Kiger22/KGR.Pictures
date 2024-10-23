@@ -11,7 +11,7 @@ const userSchema = new mongoose.Schema(
       enum: ["admin", "user"],
       default: "user",
     },
-    nombre: { type: String, required: false },
+    name: { type: String, required: false },
     email: { type: String, required: false },
   },
   {
@@ -24,5 +24,5 @@ userSchema.pre("save", function () {
   this.password = bcrypt.hashSync(this.password, 10);
 })
 
-const User = mongoose.model("user", userSchema, "user");
+const User = mongoose.model("users", userSchema, "users");
 module.exports = User;

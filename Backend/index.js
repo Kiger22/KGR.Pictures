@@ -4,20 +4,23 @@ const express = require("express");
 
 const app = express();
 const router = express.Router();
+app.use(express.json());
 
 PORT = process.env.PORT || 3000;
 
+// Conexión a la base de datos
 const { connectDB } = require("./src/config/db");
-const albumRoutes = require("./src/api/routes/Album.routes");
-const userRoutes = require("./src/api/routes/User.routes");
 connectDB();
 
-app.use(express.json());
-
 // Rutas
+const albumRoutes = require("./src/api/routes/Album.routes");
+const userRoutes = require("./src/api/routes/User.routes");
+const photosRoutes = require("./src/api/routes/Photo.routes");
+
 app.use("/", router);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/album", albumRoutes);
+app.use("/api/v1/photo", photosRoutes);
 
 app.use("*", (req, res, next) => {
   const error = new Error("Not Found");

@@ -5,8 +5,9 @@ const photoSchema = new mongoose.Schema(
     title: { type: String, required: true },
     description: { type: String, required: false },
     imageUrl: { type: String, required: false },
-    album: { type: mongoose.Schema.Types.ObjectId, ref: "Album", required: false },
-    owner: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false },
+    album: { type: mongoose.Types.ObjectId, ref: "albums", required: false },
+    likes: [{ type: mongoose.Types.ObjectId, ref: "users", require: false }],
+    owner: { type: mongoose.Types.ObjectId, ref: "users", required: false },
   },
   {
     timestamps: true,

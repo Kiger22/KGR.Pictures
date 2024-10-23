@@ -1,4 +1,4 @@
-const { isAdmin } = require("../../middlewares/auth");
+const { isAdmin, isAuth } = require("../../middlewares/auth");
 const {
   registerUser,
   loginUser,
@@ -9,10 +9,10 @@ const {
 
 const userRoutes = require("express").Router();
 
-userRoutes.get("/", getUser);
+userRoutes.get("/", [isAdmin], getUser);
 userRoutes.post("/register", registerUser);
 userRoutes.post("/login", loginUser);
 userRoutes.put("/:id/role", [isAdmin], updateUserRoles);
-userRoutes.delete("/:id", deleteUser);
+userRoutes.delete("/:id", [isAuth], deleteUser);
 
 module.exports = userRoutes;

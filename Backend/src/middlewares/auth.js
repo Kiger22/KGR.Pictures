@@ -10,6 +10,8 @@ const isAuth = async (req, res, next) => {
     }
 
     const { id } = verifyJwt(token);
+    console.log("ID decodificado del token:", id);
+
     const user = await User.findById(id);
 
     if (!user) {
@@ -17,6 +19,7 @@ const isAuth = async (req, res, next) => {
     }
     user.password = undefined;
     req.user = user;
+    console.log("Usuario autenticado:", req.user);
     next();
   }
   catch (error) {

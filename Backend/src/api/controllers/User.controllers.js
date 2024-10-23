@@ -19,6 +19,9 @@ const registerUser = async (req, res, next) => {
     const newUser = new User({
       username: req.body.username,
       password: req.body.password,
+      role: req.body.role || "user",
+      name: req.body.name,
+      email: req.body.email
     });
 
     const existingUser = await User.findOne({ username: req.body.username });
@@ -29,7 +32,7 @@ const registerUser = async (req, res, next) => {
 
     const userSaved = await newUser.save();
 
-    return res.status(201).json(userSaved);
+    return res.status(201).json({ message: "Usuario registrado", user: userSaved });
   }
   catch (error) {
     return res.status(400).json("Error : " + error.message);
@@ -49,10 +52,9 @@ const loginUser = async (req, res, next) => {
 
     if (passwordMatch) {
       const token = generateSign(user._id);
-      console.log({ user, token });
-      return res.status(200).json({ user, token });
-    }
-    else {
+      console.log({ user: user.username, id: user.id, token });
+      return res.status(200).json({ message: "Acceso permitido", user, token });
+    } else {
       return res.status(401).json({ message: "Contraseña incorrecta" });
     }
   }
@@ -95,7 +97,7 @@ const deleteUser = async (req, res) => {
         return res.status(404).json("Usuario no encontrado");
       }
 
-      return res.status(200).json("Usuario eliminado correctamente");
+      return res.status(200).json({ message: "Usuario eliminado correctamente", userToDelete });
     } else {
       return res.status(403).json("No tienes permisos para eliminar este usuario");
     }
