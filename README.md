@@ -162,13 +162,13 @@ Este endpoint lista todos los álbumes que son públicos.
 - ### Otros
 
 | Método  | Endpoint                          | Descripción                                   |
-|---------|------------------------------------|-----------------------------------------------|
-| **GET** | `/categories`                     | Obtener todas las categorías.                 |
-| **GET** | `/categories/:id`                 | Obtener una categoría por ID.                 |
-| **GET** | `/categories/name/:name`          | Obtener categorías por nombre.                |
-| **POST**| `/categories`                     | Agregar una nueva categoría.                  |
-| **PUT** | `/categories/:id`                 | Actualizar una categoría existente.           |
-| **DELETE**| `/categories/:id`               | Eliminar una categoría.                       |
+|---------|-----------------------------------|-----------------------------------------------|
+| **PUT** | `user/:id/role"`                  | Permite cambio de Role cuando eres admin      |
+| **PUT** | `album/:id`                       | Actualizar Álbumes                            |
+| **GET** | `/album/shared`                   | Obtener álbumes compartidos                   |
+| **POST**| `/photo/:albumId`                 |  Agregar una nueva foto a un album.           |
+| **POST** | `/photo/photos/:albumId`         | Agregar varias a un album.                    |
+| **DELETE**| `/album/:id`                    | Eliminar una album.                           |
 
 ## Estructura del Proyecto
 
