@@ -91,6 +91,30 @@ const postAlbum = async (req, res, next) => {
       return res.status(404).json({ message: "Usuario no encontrado" });
     }
 
+    // Verificar si ya existe un álbum con el mismo título para este usuario
+    const existingAlbumByTitle = await Album.findOne({ title: title, owner: owner._id });
+
+    if (existingAlbumByTitle) {
+      return res.status(400).json({ message: "Ya existe un álbum con ese título para este usuario." });
+    }
+
+    let imgUrl = null;
+
+    // Si el usuario subió una imagen, verificar su nombre de archivo antes de subirla al directorio
+    if (req.file && req.file.filename) {
+      const fileName = req.file.filename;
+
+      // Verificar si ya existe un álbum con el mismo nombre de archivo para este usuario
+      const existingAlbumByImage = await Album.findOne({ imgUrl: fileName, owner: owner._id });
+      if (existingAlbumByImage) {
+        // Eliminar la imagen de Cloudinary
+        await deleteImgCloudinary(req.file.path); // Llama a la función para eliminar de Cloudinary
+        return res.status(400).json({ message: "Ya existe un álbum con esa imagen para este usuario." });
+      }
+
+      imgUrl = fileName;  // Guardar la imagen solo si no existe
+    }
+
     // Crear el nuevo álbum con los datos proporcionados y el ID del usuario propietario
     const newAlbum = new Album({
       title,
@@ -98,21 +122,16 @@ const postAlbum = async (req, res, next) => {
       owner: owner._id,               // Asigna el ID del usuario como propietario
       photos: [],                     // Inicialmente, no hay fotos en el álbum
       isPublic: isPublic || false,    // El álbum es privado por defecto
+      imgUrl,                         // Asignar la URL de la imagen si existe
     });
-
-    // Subir la imagen del álbum (si hay) al directorio de imágenes
-    if (req.file && req.file.path) {
-      newAlbum.imgUrl = req.file.path;  // Guardar la URL pública de la imagen de Cloudinary
-    }
 
     // Guardar el álbum en la base de datos y retornar el resultado
     const savedAlbum = await newAlbum.save();
     return res.status(201).json({ message: "Álbum creado exitosamente", savedAlbum });
+  } catch (error) {
+    return res.status(400).json({ message: "Ha ocurrido un error al crear un nuevo álbum" });
   }
-  catch (error) {
-    return res.status(400).json("Ha ocurrido un error al crear un nuevo album");
-  }
-}
+};
 
 // Compartir Album
 const shareAlbum = async (req, res) => {
