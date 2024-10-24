@@ -130,7 +130,6 @@ POST "http://localhost:3000/albums/ID_DEL_ALBUM/photos" \
 
 **_Requiere autenticación (JWT)_**
 
-
 ```bash
 PUT "http://localhost:3000/photos/ID_DE_LA_FOTO/like" \
 -H "Authorization: Bearer TOKEN_JWT"
